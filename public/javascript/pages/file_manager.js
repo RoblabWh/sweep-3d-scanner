@@ -14,7 +14,9 @@ function init() {
 
 function initButtons() {
     $("#btn_DownloadFile").click(downloadFile);
+    $("#btn_ShowFile").click(showFile);
     $("#btn_DeleteFile").click(deleteFile);
+
 }
 
 function refreshFiles() {
@@ -30,7 +32,8 @@ function populateFilesSelect(files) {
 
     if (files.length <= 0) {
         $("#btn_DeleteFile").hide();
-        $("#btn_DownloadFile").hide();
+        $("#btn_ShowFile").hide();
+	$("#btn_DownloadFile").hide();
         showWarning("There are currently no files available.");
         return;
     }
@@ -50,6 +53,7 @@ function populateFilesSelect(files) {
         $("#select_FileName").append(optionHTML);
     }
 
+    $("#btn_ShowFile").show();
     $("#btn_DeleteFile").show();
     $("#btn_DownloadFile").show();
 }
@@ -95,6 +99,19 @@ function downloadFile() {
     // download the file with a dialog by opening a separate window
     if (filename.length > 0) {
         window.open(`/file_manager/download_file/${format}/${filename}`);
+    }
+}
+
+function showFile() {
+    // read desired format
+    //let format = 'ply';
+    let format = $("#form_FileManager input[type='radio']:checked").val();
+    // read the filename from the select dropdown
+    let filename = $('#select_FileName').find(":selected").val();
+
+    // download the file with a dialog by opening a separate window
+    if (filename.length > 0) {
+        window.open(`/file_manager/show_file/${filename}`);
     }
 }
 

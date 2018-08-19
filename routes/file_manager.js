@@ -62,4 +62,22 @@ router.route('/download_file/:format/:file(*)')
             });
     })
 
+// show selected file in potree
+router.route('/show_file/:file(*)')
+    .get(function (req, res, next) {
+        let filename = req.params.file;
+        let downloadPath = FILE_MANAGER.getFormattedFile(filename, "ply");
+	console.log(downloadPath);
+	var execSync = require('child_process').execSync;
+	execSync("PotreeConverter -i " + downloadPath.replace(/(\s+)/g, '\\$1') + " --page-template /resources/page_template/ -o ~/code/scanse/sweep-3d-scanner/public/converted -p " + filename.replace(/(\s+)/g, '\\$1') + " --material ELEVATION  --overwrite", function callback(error, stdout, stderr) {
+    		console.log(error + stdout + stderr);
+	});
+	if (_STORAGE.checkFileExists(downloadPath))
+	    res.sendFile(filename + '.html', { root: path.join(__dirname, '../public/converted') });
+
+});
+
+
+
+
 module.exports = app;
